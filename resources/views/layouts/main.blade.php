@@ -12,10 +12,7 @@
 <nav class="">
     <div class="bg-blue-600 p-3 text-center text-white text-5xl">Reza</div>
     <div class="justify-between bg-blue-700">
-        <livewire:sports-list />
-        {{--@foreach ($sports as $sport)
-        <a href="{{ route('sport', $sport['id']) }}" class="text-white p-2">{{ $sport['name']}}</a>
-        @endforeach--}}
+        @livewire('sports-list')
     </div>
 </nav>
 

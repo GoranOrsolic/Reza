@@ -12,6 +12,7 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "livewire/livewire": "^2.12",
+        "predis/predis": "^2.2",
         "spatie/laravel-view-models": "^1.5"
     },
     "require-dev": {

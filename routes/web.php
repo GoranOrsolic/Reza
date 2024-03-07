@@ -19,6 +19,7 @@ Route::get('/{id}', [App\Http\Controllers\SportsController::class, 'show'])->nam
 
 Route::get('/standings/{tournamentId}', [SeasonStandingsController::class, 'show'])->name('standings');
 
+Route::get('/standings/{tournamentId}/{page}', [SeasonStandingsController::class, 'show'])->name('standings.show');
 
 
 //Route::get('/football', [App\Http\Controllers\SportsController::class, 'show'])->name('football.index');
@@ -26,15 +27,15 @@ Route::get('/standings/{tournamentId}', [SeasonStandingsController::class, 'show
 Route::get('/{id}', [App\Http\Controllers\SportsController::class, 'show'])->name('sport');
 
 
-Route::get('/football/tournaments/{id}', [App\Http\Controllers\FootballController::class, 'index'])->name('football.tournaments');
+/*Route::get('/football/tournaments/{id}', [App\Http\Controllers\FootballController::class, 'index'])->name('football.tournaments');*/
 
-Route::get('/seasons/{id}', [App\Http\Controllers\FootballController::class, 'show'])->name('seasons');
+/*Route::get('/seasons/{id}', [App\Http\Controllers\FootballController::class, 'show'])->name('seasons');*/
 
 /*Route::get('/standings/{ide}/{url}', [App\Http\Controllers\FootballController::class, 'standings'])->name('standings');*/
 
 Route::get('/team/football/{id}', [App\Http\Controllers\FootballController::class, 'footballTeam'])->name('team.football');
 
-Route::get('/team/football/page/{page?}', [App\Http\Controllers\FootballController::class, 'footballTeam'])->name('team.football');
+/*Route::get('/team/football/page/{page?}', [App\Http\Controllers\FootballController::class, 'footballTeam'])->name('team.football');*/
 
 
 

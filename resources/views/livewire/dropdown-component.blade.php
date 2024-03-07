@@ -22,9 +22,15 @@
                 @if(count($tournaments[$category['id']]) > 0)
                     <ul class="cursor-pointer justify-center">
                         @foreach($tournaments[$category['id']] as $tournament)
-                            <li class="bg-slate-200 hover:bg-slate-300 w-full text-center">
-                                <a href="{{ route('standings', ['tournamentId' => $tournament['id']]) }}">{{ $tournament['name'] }}</a>
-                            </li>
+                            @foreach($tournament['uniqueTournaments'] as $uniqueTournament)
+                                <li class="bg-slate-200 hover:bg-slate-300 w-full text-center">
+                                    @if(isset($uniqueTournament['id']))
+                                        <a href="{{ route('standings', ['tournamentId' => $uniqueTournament['id']]) }}">{{ $uniqueTournament['name'] }}</a>
+                                    @else
+                                        <span>{{ $uniqueTournament['name'] }}</span>
+                                    @endif
+                                </li>
+                            @endforeach
                         @endforeach
                     </ul>
                 @else
