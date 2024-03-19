@@ -194,7 +194,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl p-2 shadow-xl mb-2 grid grid-cols-3 gap-4">
+                <div class="bg-white rounded-xl p-2 shadow-xl mb-2">
                     <div class="p-2 font-bold">Top rating players</div>
                     @php
                         $first10Ratings = array_slice($topStatsPlayers['data']['rating'], 0, 10);
@@ -220,7 +220,7 @@
                 </div>
 
 
-                <div class="bg-white rounded-xl p-2 shadow-xl mb-2 grid grid-cols-3 gap-4">
+                <div class="bg-white rounded-xl p-2 shadow-xl mb-2">
                     <div class="p-2 font-bold">Most goals </div>
                     @php
                         $first10Goals = array_slice($topStatsPlayers['data']['goals'], 0, 10);

@@ -29,10 +29,11 @@ class FootballTeamViewModel extends ViewModel
     public  $playerPhotos;
     public $seasonStats;
     public $teamId;
+    public $mediaInfo;
 
     public function __construct($dat, $base64, $transfers, $tournaments, $players, $eventsNext, $eventsLast,
                                 $standings, $teamLogos, $tournamentId, $seasonId, $page, $id, $nextMatch, $homeTeamLogoImg, $awayTeamLogoImg,
-                                $headTwoHeadStats, $matchInfo, $averageAge, $logos, $playerPhotos, $seasonStats, $teamId)
+                                $headTwoHeadStats, $matchInfo, $averageAge, $logos, $playerPhotos, $seasonStats, $teamId, $mediaInfo)
     {
         $this->dat = $dat;
         $this->base64 = $base64;
@@ -57,6 +58,7 @@ class FootballTeamViewModel extends ViewModel
         $this->playerPhotos = $playerPhotos;
         $this->seasonStats = $seasonStats;
         $this->teamId = $teamId;
+        $this->mediaInfo = $mediaInfo;
     }
 
 }

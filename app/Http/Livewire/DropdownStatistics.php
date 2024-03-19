@@ -32,6 +32,9 @@ class DropdownStatistics extends Component
 
         $this->seasonStats = json_decode($seasonStatistics->getBody()->getContents(), true);
 
+        $this->selectedCategory = 'Summary';
+        $this->isOpen = true;
+
         // Organizirajte podatke u kategorije
         $this->options = [
             'Summary' => ['matches', 'goalsScored', 'goalsConceded', 'assists'],
@@ -41,8 +44,6 @@ class DropdownStatistics extends Component
             'Other' => ['yellowCards', 'redCards'],
         ];
 
-        // Postavite početnu kategoriju
-        $this->selectedCategory = 'Summary';
     }
 
     public function render()
