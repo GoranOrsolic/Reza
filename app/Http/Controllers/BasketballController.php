@@ -31,7 +31,7 @@ class BasketballController extends Controller
 
         $dataTournament = $this->getTournamentData($tournamentId);
 
-        $teamHolderImg = isset($dataTournament['data']['titleHolder']['id']) ? $this->getTeamLogoById($dataTournament['data']['titleHolder']['id']) : null;
+        $teamCurrHolderImg = isset($dataTournament['data']['titleHolder']['id']) ? $this->getTeamLogoById($dataTournament['data']['titleHolder']['id']) : null;
 
         $teamMostImg = isset($dataTournament['data']['mostTitlesTeams'][0]['id']) ? $this->getTeamLogoById($dataTournament['data']['mostTitlesTeams'][0]['id']) : null;
 
@@ -47,7 +47,7 @@ class BasketballController extends Controller
             'headTwoHeadStats' => $headTwoHeadStats,
             'matchInfo' => $matchInfo,
             'dataTournament' => $dataTournament,
-            'teamHolderImg' => $teamHolderImg,
+            'teamCurrHolderImg' => $teamCurrHolderImg,
             'teamMostImg' => $teamMostImg,
 
         ]);

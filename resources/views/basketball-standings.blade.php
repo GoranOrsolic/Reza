@@ -149,7 +149,7 @@
                                     <div class="pl-2 pt-2 pb-2 font-bold">Titles</div>
                                     <div class="flex flex-wrap justify-around items-center bg-gray-100 pt-2">
                                         <div class="text-center">
-                                            <img src="{{$teamHolderImg}}" alt="Logo" class="rounded mx-auto" width="40" height="40">
+                                            <img src="{{$teamCurrHolderImg}}" alt="Logo" class="rounded mx-auto" width="40" height="40">
                                             {{$tournamentInfo['titleHolder']['name']}}
                                             <br>
                                             Title holder({{$tournamentInfo['titleHolderTitles']}})
@@ -170,14 +170,12 @@
             <div class="w-2/5">
                 <div class="bg-white p-2 rounded-xl shadow-xl mb-2">
                     <h2>Featured Match</h2>
-{{--
                     <div class="bg-gray-100 p-2 rounded-xl" style="background-color: #f3f4f6 !important;">
                         @foreach($dataFeaturedEvents as $featuredEvents)
                             <div class="flex items-center">
                                 <img class="mr-4" src="data:image/png;base64,{{ $tournamentLogo }}" alt="Tournament Logo" width="24" height="24">
                                 {{ $featuredEvents[0]['tournament']['category']['name'] }},
                                 {{ $featuredEvents[0]['tournament']['name'] }},
-                                Round {{ $featuredEvents[0]['roundInfo']['round'] }}
                             </div>
 
                             <div class="flex justify-between pt-2">
@@ -197,7 +195,7 @@
                                 </div>
                             </div>
                         @endforeach
-                    </div>--}}
+                    </div>
                 </div>
 
                 <div class="bg-white rounded-xl p-2 shadow-xl mb-2">
