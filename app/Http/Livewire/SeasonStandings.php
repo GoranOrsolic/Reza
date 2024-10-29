@@ -36,6 +36,10 @@ class SeasonStandings extends Component
 
     public function render()
     {
+        $nextEventsData = [];
+        $pastEventsData = [];
+
+        // Dohvaćanje podataka o događajima koji tek dolaze
         $nextEventsResponse = $this->sendRequestWithRetry(function () {
             return Http::withHeaders([
                 'X-RapidAPI-Key' => '5815fc42c9msh73f3079e4d4c18ap1a1fa8jsnb9b50db354f6',
@@ -47,24 +51,30 @@ class SeasonStandings extends Component
             $nextEventsData = $nextEventsResponse->json()['data']['events'];
         }
 
+        // Dohvaćanje podataka o prošlim događajima
         $pastEventsResponse = $this->sendRequestWithRetry(function () {
-           return Http::withHeaders([
+            return Http::withHeaders([
                 'X-RapidAPI-Key' => '5815fc42c9msh73f3079e4d4c18ap1a1fa8jsnb9b50db354f6',
                 'X-RapidAPI-Host' => 'sofasport.p.rapidapi.com'
             ])->get('https://sofasport.p.rapidapi.com/v1/seasons/events?page=0&course_events=last&unique_tournament_id=' . $this->tournamentId . '&seasons_id=' . $this->seasonId);
         });
+
         if (isset($pastEventsResponse->json()['data']['events'])) {
             $pastEventsData = $pastEventsResponse->json()['data']['events'];
         }
 
-        // Sortiranje događaja po startTimestampu
-        usort($nextEventsData, function($a, $b) {
-            return $a['startTimestamp'] - $b['startTimestamp'];
-        });
+        // Provjera jesu li podaci definirani i nisu null prije sortiranja
+        if (!is_null($nextEventsData)) {
+            usort($nextEventsData, function($a, $b) {
+                return $a['startTimestamp'] - $b['startTimestamp'];
+            });
+        }
 
-        usort($pastEventsData, function($a, $b) {
-            return $a['startTimestamp'] - $b['startTimestamp'];
-        });
+        if (!is_null($pastEventsData)) {
+            usort($pastEventsData, function($a, $b) {
+                return $a['startTimestamp'] - $b['startTimestamp'];
+            });
+        }
 
         // Datum trenutnog vremena
         $currentTime = time();
@@ -73,15 +83,19 @@ class SeasonStandings extends Component
         $pastEvents = [];
         $futureEvents = [];
 
-        foreach ($pastEventsData as $event) {
-            if ($event['startTimestamp'] < $currentTime) {
-                $pastEvents[] = $event;
+        if (!is_null($pastEventsData)) {
+            foreach ($pastEventsData as $event) {
+                if ($event['startTimestamp'] < $currentTime) {
+                    $pastEvents[] = $event;
+                }
             }
         }
 
-        foreach ($nextEventsData as $event) {
-            if ($event['startTimestamp'] >= $currentTime) {
-                $futureEvents[] = $event;
+        if (!is_null($nextEventsData)) {
+            foreach ($nextEventsData as $event) {
+                if ($event['startTimestamp'] >= $currentTime) {
+                    $futureEvents[] = $event;
+                }
             }
         }
 
@@ -102,6 +116,7 @@ class SeasonStandings extends Component
             'updating' => $this->updating
         ]);
     }
+
     private function sendRequestWithRetry($requestFunction)
     {
         $maxRetries = 3; // Maksimalan broj ponovnih pokušaja

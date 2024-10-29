@@ -22,21 +22,27 @@ class SeasonStandingsController extends Controller
 
         $dataTournament = $this->getTournamentData($tournamentId);
 
-        $teamHolderImg = $this->getTeamLogoById($dataTournament['data']['titleHolder']['id']);
+        // Provjeri postojanje ključa 'data' prije pristupa
+        $teamHolderImg = isset($dataTournament['data']['titleHolder']['id']) ? $this->getTeamLogoById($dataTournament['data']['titleHolder']['id']) : null;
 
-        $teamMostImg = $this->getTeamLogoById($dataTournament['data']['mostTitlesTeams'][0]['id']);
+        // Provjeri postojanje ključa 'data' prije pristupa
+        $teamMostImg = isset($dataTournament['data']['mostTitlesTeams'][0]['id']) ? $this->getTeamLogoById($dataTournament['data']['mostTitlesTeams'][0]['id']) : null;
 
-        $lowerDivisionImg = $this->getLowerDivisionLogo($dataTournament['data']['lowerDivisions'][0]['id']);
+        // Provjeri postojanje ključa 'data' prije pristupa
+        $lowerDivisionImg = isset($dataTournament['data']['lowerDivisions'][0]['id']) ? $this->getLowerDivisionLogo($dataTournament['data']['lowerDivisions'][0]['id']) : null;
 
         $newcomersInfo = $this->getNewcomersInfo($seasonId, $tournamentId);
 
-        $newcomersLogoImg = $this->getTeamLogoById($newcomersInfo['data']['newcomersLowerDivision'][0]['id']);
+        // Provjeri postojanje ključa 'data' prije pristupa
+        $newcomersLogoImg = isset($newcomersInfo['data']['newcomersLowerDivision'][0]['id']) ? $this->getTeamLogoById($newcomersInfo['data']['newcomersLowerDivision'][0]['id']) : null;
 
         $dataFeaturedEvents = $this->getFeaturedEvents($tournamentId);
 
-        $homeTeamLogoImg = $this->getTeamLogoById($dataFeaturedEvents['data'][0]['homeTeam']['id']);
+        // Provjeri postojanje ključa 'data' prije pristupa
+        $homeTeamLogoImg = isset($dataFeaturedEvents['data'][0]['homeTeam']['id']) ? $this->getTeamLogoById($dataFeaturedEvents['data'][0]['homeTeam']['id']) : null;
 
-        $awayTeamLogoImg = $this->getTeamLogoById($dataFeaturedEvents['data'][0]['awayTeam']['id']);
+        // Provjeri postojanje ključa 'data' prije pristupa
+        $awayTeamLogoImg = isset($dataFeaturedEvents['data'][0]['awayTeam']['id']) ? $this->getTeamLogoById($dataFeaturedEvents['data'][0]['awayTeam']['id']) : null;
 
         $topStatsPlayers = $this->getTopStatsPlayers($seasonId, $tournamentId);
 
@@ -106,7 +112,7 @@ class SeasonStandingsController extends Controller
                 'X-RapidAPI-Host' => 'sofasport.p.rapidapi.com',
             ],
             'query' => [
-                'unique_tournament_id' =>  $tournamentId]
+                'unique_tournament_id' => $tournamentId]
         ]);
         $logo = base64_encode($tournamentLogoResponse->getBody()->getContents());
 
@@ -158,12 +164,12 @@ class SeasonStandingsController extends Controller
     private function getTournamentData($tournamentId)
     {
         $client = new Client();
-        $tournamentData =  $client->request('GET', 'https://sofasport.p.rapidapi.com/v1/unique-tournaments/data', [
+        $tournamentData = $client->request('GET', 'https://sofasport.p.rapidapi.com/v1/unique-tournaments/data', [
             'headers' => [
                 'X-RapidAPI-Key' => '5815fc42c9msh73f3079e4d4c18ap1a1fa8jsnb9b50db354f6',
                 'X-RapidAPI-Host' => 'sofasport.p.rapidapi.com'],
             'query' => [
-                'unique_tournament_id' =>  $tournamentId]
+                'unique_tournament_id' => $tournamentId]
         ]);
         $dataTournament = json_decode($tournamentData->getBody()->getContents(), true);
 
@@ -173,12 +179,12 @@ class SeasonStandingsController extends Controller
     private function getTeamLogoById($teamId)
     {
         $client = new Client();
-        $teamHolderLogo =  $client->request('GET', 'https://sofasport.p.rapidapi.com/v1/teams/logo', [
+        $teamHolderLogo = $client->request('GET', 'https://sofasport.p.rapidapi.com/v1/teams/logo', [
             'headers' => [
                 'X-RapidAPI-Key' => '5815fc42c9msh73f3079e4d4c18ap1a1fa8jsnb9b50db354f6',
                 'X-RapidAPI-Host' => 'sofasport.p.rapidapi.com'],
             'query' => [
-                'team_id' =>  $teamId]
+                'team_id' => $teamId]
         ]);
 
         $holderLogo = $teamHolderLogo->getBody()->getContents();
@@ -190,28 +196,43 @@ class SeasonStandingsController extends Controller
     private function getNewcomersInfo($seasonId, $tournamentId)
     {
         $client = new Client();
-        $newcomersData =  $client->request('GET', 'https://sofasport.p.rapidapi.com/v1/seasons/data', [
-            'headers' => [
-                'X-RapidAPI-Key' => '5815fc42c9msh73f3079e4d4c18ap1a1fa8jsnb9b50db354f6',
-                'X-RapidAPI-Host' => 'sofasport.p.rapidapi.com'],
-            'query' => [
-                'seasons_id' =>  $seasonId,
-                'unique_tournament_id' =>  $tournamentId]
-        ]);
-        $newcomersInfo = json_decode($newcomersData->getBody()->getContents(), true);
 
-        return $newcomersInfo;
+        try {
+            $newcomersData = $client->request('GET', 'https://sofasport.p.rapidapi.com/v1/seasons/data', [
+                'headers' => [
+                    'X-RapidAPI-Key' => '5815fc42c9msh73f3079e4d4c18ap1a1fa8jsnb9b50db354f6',
+                    'X-RapidAPI-Host' => 'sofasport.p.rapidapi.com'
+                ],
+                'query' => [
+                    'seasons_id' => $seasonId,
+                    'unique_tournament_id' => $tournamentId
+                ]
+            ]);
+
+            $newcomersInfo = json_decode($newcomersData->getBody()->getContents(), true);
+            return $newcomersInfo;
+
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            // Provjera ako je greška 404
+            if ($e->getResponse()->getStatusCode() == 404) {
+                // Ako je 404 greška, vraćamo prazan niz ili null
+                return [];
+            } else {
+                // Ako je neka druga greška, ponovno bacamo izuzetak
+                throw $e;
+            }
+        }
     }
 
     private function getFeaturedEvents($tournamentId)
     {
         $client = new Client();
-        $featuredEvents =  $client->request('GET', 'https://sofasport.p.rapidapi.com/v1/unique-tournaments/featured-events', [
+        $featuredEvents = $client->request('GET', 'https://sofasport.p.rapidapi.com/v1/unique-tournaments/featured-events', [
             'headers' => [
                 'X-RapidAPI-Key' => '5815fc42c9msh73f3079e4d4c18ap1a1fa8jsnb9b50db354f6',
                 'X-RapidAPI-Host' => 'sofasport.p.rapidapi.com'],
             'query' => [
-                'unique_tournament_id' =>  $tournamentId]
+                'unique_tournament_id' => $tournamentId]
         ]);
         $dataFeaturedEvents = json_decode($featuredEvents->getBody()->getContents(), true);
 
@@ -236,9 +257,10 @@ class SeasonStandingsController extends Controller
                         'player_id' => $playerId,
                     ],
                 ]);
-
-                $playerPhotoData = $playerPhoto->getBody()->getContents();
-                $playerPhotos[] = 'data:image/png;base64,' . base64_encode($playerPhotoData);
+                if ($playerPhoto->getStatusCode() == 200) {
+                    $playerPhotoData = $playerPhoto->getBody()->getContents();
+                    $playerPhotos[] = 'data:image/png;base64,' . base64_encode($playerPhotoData);
+                }
             } catch (\GuzzleHttp\Exception\RequestException $e) {
                 sleep(5);
             }
@@ -279,7 +301,7 @@ class SeasonStandingsController extends Controller
     private function getTopStatsPlayers($seasonId, $tournamentId)
     {
         $client = new Client();
-        $topStatsPlayers =  $client->request('GET', 'https://sofasport.p.rapidapi.com/v1/seasons/players-statistics/result', [
+        $topStatsPlayers = $client->request('GET', 'https://sofasport.p.rapidapi.com/v1/seasons/players-statistics/result', [
             'headers' => [
                 'X-RapidAPI-Key' => '5815fc42c9msh73f3079e4d4c18ap1a1fa8jsnb9b50db354f6',
                 'X-RapidAPI-Host' => 'sofasport.p.rapidapi.com',

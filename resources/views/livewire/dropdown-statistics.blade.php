@@ -50,10 +50,15 @@
                                 'accurateCrossesPercentage',
                             ];
 
+                            // Provjeri postoji li ključ prije nego što mu pristupimo
+                            $value = $seasonStats['data'][$option] ?? null;
+
                             // Primijeni postotni format ako je ključ u popisu postotnih ključeva
-                            $formattedValue = in_array($option, $percentageKeys)
-                                ? number_format($seasonStats['data'][$option], 2) . '%'
-                                : number_format($seasonStats['data'][$option], 0);
+                            $formattedValue = $value !== null
+                                ? (in_array($option, $percentageKeys)
+                                    ? number_format($value, 2) . '%'
+                                    : number_format($value, 0))
+                                : 'N/A';
                         @endphp
 
                         <span>{{ $displayKey }}:</span>

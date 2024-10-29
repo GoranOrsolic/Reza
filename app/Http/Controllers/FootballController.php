@@ -53,10 +53,10 @@ class FootballController extends Controller
             dd($logo);
             }*/
 
-       /* $viewModel = new LogoViewModel($tournaments);
+        /* $viewModel = new LogoViewModel($tournaments);
 
 
-        return view('football.tournaments', $viewModel);*/
+         return view('football.tournaments', $viewModel);*/
 
     }
 
@@ -125,12 +125,12 @@ class FootballController extends Controller
                 $dat = $teamLogo->getBody()->getContents();
                 $base64 = 'data:image/png;base64,' . base64_encode($dat);
                 //dd($base64);*/
-/*                $teamLogo->getHeader('content-type')[0];*/
+        /*                $teamLogo->getHeader('content-type')[0];*/
 
-       /* $viewModel = new StandingsViewModel($standings, $nextEvents, $pastEvents, $base64);
+        /* $viewModel = new StandingsViewModel($standings, $nextEvents, $pastEvents, $base64);
 
 
-        return view('standings', $viewModel);*/
+         return view('standings', $viewModel);*/
 
     }
 
@@ -245,17 +245,32 @@ class FootballController extends Controller
 
         ////Team statistics
         $client = new Client();
-        $seasonStatistics =  $client->request('GET', 'https://sofasport.p.rapidapi.com/v1/teams/statistics/result', [
-            'headers' => [
-                'X-RapidAPI-Key' => '5815fc42c9msh73f3079e4d4c18ap1a1fa8jsnb9b50db354f6',
-                'X-RapidAPI-Host' => 'sofasport.p.rapidapi.com'],
-            'query' => [
-                'team_id' =>  $id,
-                'season_id' => $seasonId,
-                'unique_tournament_id' => $tournamentId,
-                'team_stat_type' => 'overall']
-        ]);
-        $seasonStats = json_decode($seasonStatistics->getBody()->getContents(), true);
+
+        try {
+            $response = $client->request('GET', 'https://sofasport.p.rapidapi.com/v1/teams/statistics/result', [
+                'headers' => [
+                    'X-RapidAPI-Key' => '5815fc42c9msh73f3079e4d4c18ap1a1fa8jsnb9b50db354f6',
+                    'X-RapidAPI-Host' => 'sofasport.p.rapidapi.com'
+                ],
+                'query' => [
+                    'team_id' =>  $id,
+                    'season_id' => $seasonId,
+                    'unique_tournament_id' => $tournamentId,
+                    'team_stat_type' => 'overall'
+                ]
+            ]);
+
+            $seasonStats = json_decode($response->getBody()->getContents(), true);
+
+            if (empty($seasonStats)) {
+                // API odgovor je prazan, poduzmi odgovarajuće mjere
+                $seasonStats = ['message' => 'Trenutno nema podataka za ovu sezonu.'];
+            }
+
+        } catch (RequestException $e) {
+            // Obradi grešku API poziva
+            $seasonStats = ['error' => 'Greška pri dohvaćanju podataka: ' . $e->getMessage()];
+        }
 
         ///// Team logo
         $teamLogos = [];
@@ -383,22 +398,37 @@ class FootballController extends Controller
         foreach ($players['data']['players'] as $playerDataId) {
             $playerId = $playerDataId['player']['id'];
 
-            $playerPhotos[$playerId] = Cache::remember("player_photos_{$playerId}", now()->addDay(), function () use ($client, $playerId) {
-                // Ovaj blok koda izvršit će se samo ako slika nije već u cache-u ili je cache istekao.
+            $playerPhotos[$playerId] = Cache::remember("player_photos_{$playerId}", now()->addHours(24), function () use ($client, $playerId) {
+                try {
+                    $playerPhotoResponse = $client->request('GET', 'https://sofasport.p.rapidapi.com/v1/players/photo', [
+                        'headers' => [
+                            'X-RapidAPI-Key' => '5815fc42c9msh73f3079e4d4c18ap1a1fa8jsnb9b50db354f6',
+                            'X-RapidAPI-Host' => 'sofasport.p.rapidapi.com',
+                        ],
+                        'query' => [
+                            'player_id' => $playerId,
+                        ],
+                    ]);
 
-
-                $playerPhotoResponse = $client->request('GET', 'https://sofasport.p.rapidapi.com/v1/players/photo', [
-                    'headers' => [
-                        'X-RapidAPI-Key' => '5815fc42c9msh73f3079e4d4c18ap1a1fa8jsnb9b50db354f6',
-                        'X-RapidAPI-Host' => 'sofasport.p.rapidapi.com',
-                    ],
-                    'query' => [
-                        'player_id' => $playerId,
-                    ],
-                ]);
-
-                $playerPhotoData = $playerPhotoResponse->getBody()->getContents();
-                $playerPhoto = 'data:image/png;base64,' . base64_encode($playerPhotoData);
+                    // Provjerite status odgovora
+                    if ($playerPhotoResponse->getStatusCode() === 200) {
+                        $playerPhotoData = $playerPhotoResponse->getBody()->getContents();
+                        $playerPhoto = 'data:image/png;base64,' . base64_encode($playerPhotoData);
+                    } else {
+                        // Ako je status neuspješan, postavite defaultnu sliku ili neku drugu obradu
+                        $playerPhoto = 'default-player-photo.png';
+                    }
+                } catch (\GuzzleHttp\Exception\ClientException $e) {
+                    // Uhvatite iznimku u slučaju greške 404 ili druge greške
+                    if ($e->getResponse()->getStatusCode() === 404) {
+                        // Slika igrača nije pronađena, postavite defaultnu sliku ili neku drugu obradu
+                        $playerPhoto = 'default-player-photo.png';
+                    } else {
+                        // Obrada ostalih mogućih iznimki
+                        // Možete logirati grešku ili obraditi prema potrebi
+                        $playerPhoto = 'default-player-photo.png';
+                    }
+                }
 
                 return $playerPhoto;
             });
@@ -473,7 +503,7 @@ class FootballController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $client = new Client();
+       /* $client = new Client();
         $playerStatistics =  $client->request('GET', 'https://sofasport.p.rapidapi.com/v1/teams/player-statistics/result', [
             'headers' => [
                 'X-RapidAPI-Key' => '5815fc42c9msh73f3079e4d4c18ap1a1fa8jsnb9b50db354f6',
@@ -482,9 +512,9 @@ class FootballController extends Controller
                 'unique_tournament_id' => $tournamentId,
                 'season_id' => $seasonId,
                 'team_id' =>  $id,
-                ]
+            ]
         ]);
-        $seasonPlayerStats = json_decode($seasonStatistics->getBody()->getContents(), true);
+        $seasonPlayerStats = json_decode($seasonStatistics->getBody()->getContents(), true);*/
     }
 
     /**

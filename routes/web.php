@@ -15,6 +15,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [App\Http\Controllers\SportsController::class, 'index'])->name('index');
 
+Route::get('/basketball', [App\Http\Controllers\BasketballController::class, 'show'])->name('basketball');
+
+Route::get('/basketball-standings/{tournamentId}', [App\Http\Controllers\BasketballController::class, 'showStandings'])->name('basketball-standings');
+
+
+/*Route::get('/basketball-standings/{seasonId}/{tournamentId}', function ($seasonId, $tournamentId) {
+    return view('basketball-standings', compact('seasonId', 'tournamentId'));
+});*/
+
 Route::get('/{id}', [App\Http\Controllers\SportsController::class, 'show'])->name('index');
 
 Route::get('/standings/{tournamentId}', [SeasonStandingsController::class, 'show'])->name('standings');

@@ -65,11 +65,12 @@
                                 <tr class="hover:bg-gray-100">
                                     <td class="px-2 py-2">{{ $row['position'] }}</td>
                                     <td class="px-2 py-2 text-start">
-                                        <a href="{{ route('team.football', $row['team']['id']) }}" class="flex items-center">
-                                            <img src="{{ $teamLogos[$row['team']['id']] }}" alt="{{ $row['team']['name'] }} Logo" class="rounded mr-2" width="24" height="24">
-                                            {{ $row['team']['name'] }}
-
-                                        </a>
+                                        @if(isset($row['team']['id']))
+                                            <a href="{{ route('team.football', $row['team']['id']) }}" class="flex items-center">
+                                                <img src="{{ $teamLogos[$row['team']['id']] ?? '' }}" alt="{{ $row['team']['name'] ?? '' }} Logo" class="rounded mr-2" width="24" height="24">
+                                                {{ $row['team']['name'] ?? '' }}
+                                            </a>
+                                        @endif
                                     </td>
                                     <td class="px-28"></td> <!-- Veliki razmak između druge i treće kolone -->
                                     <td class="text-center px-2 py-2">{{ $row['matches'] }}</td> <!-- Text desno za ostale kolone -->
@@ -123,42 +124,79 @@
                                 <div class="p-2 font-bold">Newcomers from lower division</div>
                                 <div class="p-2 flex border-b border-gray-400">
                                     <img src="{{$newcomersLogoImg}}" alt="Logo" class="rounded mr-3" width="32" height="32">
-                                    {{$newcomersInfo['data']['newcomersLowerDivision'][0]['name']}}
+                                    @if(isset($newcomersInfo['data']['newcomersLowerDivision'][0]['name']))
+                                        {{$newcomersInfo['data']['newcomersLowerDivision'][0]['name']}}
+                                    @else
+                                        N/A <!-- Prikaži neki tekst ili oznaku ako podaci nisu dostupni -->
+                                    @endif
                                 </div>
                                 <div class="p-2 font-bold">Facts</div>
                                 <div class="flex justify-between p-2">
-                                    <span>Goals</span> <span>{{$newcomersInfo['data']['goals']}}</span>
+                                    <span>Goals</span>
+                                    @if(isset($newcomersInfo['data']['goals']))
+                                        <span>{{$newcomersInfo['data']['goals']}}</span>
+                                    @else
+                                        <span>N/A</span>
+                                    @endif
                                 </div>
                                 <div class="flex justify-between p-2">
-                                    <span>Home team wins</span> <span>{{$newcomersInfo['data']['homeTeamWins']}}</span>
+                                    <span>Home team wins</span>
+                                    @if(isset($newcomersInfo['data']['homeTeamWins']))
+                                        <span>{{$newcomersInfo['data']['homeTeamWins']}}</span>
+                                    @else
+                                        <span>N/A</span>
+                                    @endif
                                 </div>
                                 <div class="flex justify-between p-2">
-                                    <span>Away team wins</span> <span>{{$newcomersInfo['data']['awayTeamWins']}}</span>
+                                    <span>Away team wins</span>
+                                    @if(isset($newcomersInfo['data']['awayTeamWins']))
+                                        <span>{{$newcomersInfo['data']['awayTeamWins']}}</span>
+                                    @else
+                                        <span>N/A</span>
+                                    @endif
                                 </div>
                                 <div class="flex justify-between p-2">
-                                    <span>Draws</span> <span>{{$newcomersInfo['data']['draws']}}</span>
+                                    <span>Draws</span>
+                                    @if(isset($newcomersInfo['data']['draws']))
+                                        <span>{{$newcomersInfo['data']['draws']}}</span>
+                                    @else
+                                        <span>N/A</span>
+                                    @endif
                                 </div>
                                 <div class="flex justify-between p-2">
-                                    <span>Yellow cards</span> <span>{{$newcomersInfo['data']['yellowCards']}}</span>
+                                    <span>Yellow cards</span>
+                                    @if(isset($newcomersInfo['data']['yellowCards']))
+                                        <span>{{$newcomersInfo['data']['yellowCards']}}</span>
+                                    @else
+                                        <span>N/A</span>
+                                    @endif
                                 </div>
                                 <div class="flex justify-between p-2">
-                                    <span>Red cards</span> <span>{{$newcomersInfo['data']['redCards']}}</span>
+                                    <span>Red cards</span>
+                                    @if(isset($newcomersInfo['data']['redCards']))
+                                        <span>{{$newcomersInfo['data']['redCards']}}</span>
+                                    @else
+                                        <span>N/A</span>
+                                    @endif
                                 </div>
                                 <div class="flex justify-between p-2 border-b border-gray-400">
-                                    <span>Number Of Competitors</span> <span>{{$newcomersInfo['data']['numberOfCompetitors']}}</span>
+                                    <span>Number Of Competitors</span>
+                                    @if(isset($newcomersInfo['data']['numberOfCompetitors']))
+                                        <span>{{$newcomersInfo['data']['numberOfCompetitors']}}</span>
+                                    @else
+                                        <span>N/A</span>
+                                    @endif
                                 </div>
                                 {{--<div class="p-2 font-bold">Host</div>
                                 <div class="flex justify-between p-2">
                                     <span>Country</span> <span>{{$newcomersInfo['data']['hostCountries'][0]}}</span>
                                 </div>--}}
-
                             </div>
                         </div>
                     @endforeach
                 </div>
                 <div class="bg-white rounded-xl shadow-xl mb-2">
                     @livewire('player-statistics', ['tournamentId' => $tournamentId, 'seasonId' => $seasonId])
-
                 </div>
             </div>
             <div class="w-2/5">
@@ -230,7 +268,7 @@
                         <div class="flex p-2 items-center">
                             <div class="mr-2">{{ $loop->index + 1 }}</div>
                             @if(isset($playerGoalsPhotos[$index]))
-                                 <img src="{{ $playerGoalsPhotos[$index] }}" alt="Player Image" class="rounded-full mr-2" width="38" height="38">
+                                <img src="{{ $playerGoalsPhotos[$index] }}" alt="Player Image" class="rounded-full mr-2" width="38" height="38">
                             @endif
                             <div class="flex-grow">
                                 {{ $topGoals['player']['name'] }}
@@ -245,16 +283,13 @@
                     @endforeach
 
                 </div>
+
                 <div class="bg-white rounded-xl shadow-xl mb-2">
                     Ručno popunjen sadržaj kolone 2, red 4
                 </div>
                 <div class="bg-white p-2 rounded-xl shadow-xl mb-2">
                     <h2>Team of the week</h2>
 
-                    <iframe id="sofa-totw-embed-170-52147-10728" width="100%" height="500" style="display:block;max-width:440px"
-                            src="https://widgets.sofascore.com/embed/unique-tournament/170/season/52147/round/10728/teamOfTheWeek?widgetBackground=Gray&showCompetitionLogo=true&widgetTitle=HNL" frameBorder="0" scrolling="no"></iframe>
-                    <div style="font-size:12px;font-family:Arial,sans-serif;text-align:left">
-                        Team of the Week provided by <a target="_blank" href="https://www.sofascore.com/">Sofascore</a>
                     </div>
                 </div>
             </div>

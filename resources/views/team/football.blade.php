@@ -103,8 +103,8 @@
                                             </div>
 
                                             <div class="flex flex-col items-center flex-1">
-                                                <img src="{{$awayTeamLogoImg}}" alt="Logo" class="rounded mb-3" width="48" height="48">
-                                                <span>{{ $nMatch['nextEvent']['homeTeam']['shortName'] }}</span>
+                                                <img src="{{$awayTeamLogoImg}}" alt="Logo" class="rounded" width="48" height="48">
+                                                <span>{{ $nMatch['nextEvent']['awayTeam']['shortName'] }}</span>
                                             </div>
                                         </div>
                                     @endforeach
@@ -125,7 +125,7 @@
 
                                                     <div class="flex flex-col items-center flex-1">
                                                         <img src="{{ $awayTeamLogoImg }}" alt="Logo" class="rounded mb-2" width="48" height="48">
-                                                        <span>{{ $nMatch['nextEvent']['homeTeam']['shortName'] }}</span>
+                                                        <span>{{ $nMatch['nextEvent']['awayTeam']['shortName'] }}</span>
                                                         <span>{{ $headTwoHeadStats['data']['teamDuel']['awayWins'] }}</span>
                                                     </div>
                                                 </div>
@@ -144,26 +144,36 @@
 
                                                 <div class="flex justify-between">
                                                     <span>Stadium</span>
-                                                    <span>{{$matchInfo['data']['venue']['stadium']['name']}}</span>
+                                                    @if(isset($matchInfo['data']['venue']['stadium']['name']))
+                                                        <span>{{$matchInfo['data']['venue']['stadium']['name']}}</span>
+                                                    @else
+                                                        <span>Podaci o stadionu nisu dostupni</span>
+                                                    @endif
                                                 </div>
 
-                                                <div class="flex justify-between ">
+                                                <div class="flex justify-between">
                                                     <span>Location</span>
                                                     <div class="flex items-center ml-auto">
-                                                        <img src="{{ asset('flags/' . $matchInfo['data']['venue']['country']['name'] . '.svg') }}" alt="{{ $matchInfo['data']['venue']['country']['name'] }}" class="rounded" width="16" height="16">
-                                                        <span class="ml-2">{{$matchInfo['data']['venue']['city']['name']}}, {{$matchInfo['data']['venue']['country']['name']}}</span>
+                                                        @if(isset($matchInfo['data']['venue']) && isset($matchInfo['data']['venue']['country']['name']) && isset($matchInfo['data']['venue']['city']['name']))
+                                                            <img src="{{ asset('flags/' . $matchInfo['data']['venue']['country']['name'] . '.svg') }}" alt="{{ $matchInfo['data']['venue']['country']['name'] }}" class="rounded" width="16" height="16">
+                                                            <span class="ml-2">{{$matchInfo['data']['venue']['city']['name']}}, {{$matchInfo['data']['venue']['country']['name']}}</span>
+                                                        @else
+                                                            <span class="ml-2">Podaci o lokaciji nisu dostupni</span>
+                                                        @endif
                                                     </div>
                                                 </div>
 
-                                                @if(isset($matchInfo['data']['referee']))
-                                                    <div class="flex justify-between">
-                                                        <span>Referee</span>
-                                                        <div class="flex items-center ml-auto">
+                                                <div class="flex justify-between">
+                                                    <span>Referee</span>
+                                                    <div class="flex items-center ml-auto">
+                                                        @if(isset($matchInfo['data']['referee']) && isset($matchInfo['data']['referee']['country']['name']) && isset($matchInfo['data']['referee']['name']))
                                                             <img src="{{ asset('flags/' . $matchInfo['data']['referee']['country']['name'] . '.svg') }}" alt="{{ $matchInfo['data']['referee']['country']['name'] }}" class="rounded" width="16" height="16">
                                                             <span class="ml-2">{{$matchInfo['data']['referee']['name']}}</span>
-                                                        </div>
+                                                        @else
+                                                            <span class="ml-2">Podaci o sucu nisu dostupni</span>
+                                                        @endif
                                                     </div>
-                                                @endif
+                                                </div>
 
                                             </div>
                                         </div>
@@ -298,7 +308,9 @@
                                         @if (isset($playerPhotos[$playerData['player']['id']]))
                                             <div class="relative">
                                                 <img src="{{ $playerPhotos[$playerData['player']['id']] }}" alt="{{ $playerData['player']['id'] }} Logo" class="mb-2 rounded-full mx-auto" width="63" height="63">
-                                                <span class="absolute bottom-0 right-1 bg-gray-600 text-white p-1 rounded text-xs">{{ $playerData['player']['jerseyNumber'] }}</span>
+                                                @if (isset($playerData['player']['jerseyNumber']))
+                                                    <span class="absolute bottom-0 right-1 bg-gray-600 text-white p-1 rounded text-xs">{{ $playerData['player']['jerseyNumber'] }}</span>
+                                                @endif
                                             </div>
                                         @else
                                             <p>No photo available</p>
@@ -323,7 +335,9 @@
                                         @if (isset($playerPhotos[$playerData['player']['id']]))
                                             <div class="relative">
                                                 <img src="{{ $playerPhotos[$playerData['player']['id']] }}" alt="{{ $playerData['player']['id'] }} Logo" class="mb-2 rounded-full mx-auto" width="63" height="63">
-                                                <span class="absolute bottom-0 right-1 bg-gray-600 text-white p-1 rounded text-xs">{{ $playerData['player']['jerseyNumber'] }}</span>
+                                                @if (isset($playerData['player']['jerseyNumber']))
+                                                    <span class="absolute bottom-0 right-1 bg-gray-600 text-white p-1 rounded text-xs">{{ $playerData['player']['jerseyNumber'] }}</span>
+                                                @endif
                                             </div>
                                         @else
                                             <p>No photo available</p>
@@ -349,7 +363,9 @@
                                         @if (isset($playerPhotos[$playerData['player']['id']]))
                                             <div class="relative">
                                                 <img src="{{ $playerPhotos[$playerData['player']['id']] }}" alt="{{ $playerData['player']['id'] }} Logo" class="mb-2 rounded-full mx-auto" width="63" height="63">
-                                                <span class="absolute bottom-0 right-1 bg-gray-600 text-white p-1 rounded text-xs">{{ $playerData['player']['jerseyNumber'] }}</span>
+                                                @if (isset($playerData['player']['jerseyNumber']))
+                                                    <span class="absolute bottom-0 right-1 bg-gray-600 text-white p-1 rounded text-xs">{{ $playerData['player']['jerseyNumber'] }}</span>
+                                                @endif
                                             </div>
                                         @else
                                             <p>No photo available</p>
@@ -374,7 +390,9 @@
                                         @if (isset($playerPhotos[$playerData['player']['id']]))
                                             <div class="relative">
                                                 <img src="{{ $playerPhotos[$playerData['player']['id']] }}" alt="{{ $playerData['player']['id'] }} Logo" class="mb-2 rounded-full mx-auto" width="63" height="63">
-                                                <span class="absolute bottom-0 right-1 bg-gray-600 text-white p-1 rounded text-xs">{{ $playerData['player']['jerseyNumber'] }}</span>
+                                                @if (isset($playerData['player']['jerseyNumber']))
+                                                    <span class="absolute bottom-0 right-1 bg-gray-600 text-white p-1 rounded text-xs">{{ $playerData['player']['jerseyNumber'] }}</span>
+                                                @endif
                                             </div>
                                         @else
                                             <p>No photo available</p>

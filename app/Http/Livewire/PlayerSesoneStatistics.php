@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Cache;
 class PlayerSesoneStatistics extends Component
 {
     public $playerStatistics;
+    public $playerPhotos;
     public $selectedKey;
     public $teamId;
     public $seasonId;
@@ -48,25 +49,31 @@ class PlayerSesoneStatistics extends Component
         $playerPhotos = [];
         foreach ($playerIds as $playerId) {
             $playerPhotos[$playerId] = Cache::remember("player_photos_{$playerId}", now()->addDay(), function () use ($client, $playerId) {
-                $playerPhotoResponse = $client->request('GET', 'https://sofasport.p.rapidapi.com/v1/players/photo', [
-                    'headers' => [
-                        'X-RapidAPI-Key' => '5815fc42c9msh73f3079e4d4c18ap1a1fa8jsnb9b50db354f6',
-                        'X-RapidAPI-Host' => 'sofasport.p.rapidapi.com',
-                    ],
-                    'query' => [
-                        'player_id' => $playerId,
-                    ],
-                ]);
+                try {
+                    $playerPhotoResponse = $client->request('GET', 'https://sofasport.p.rapidapi.com/v1/players/photo', [
+                        'headers' => [
+                            'X-RapidAPI-Key' => '5815fc42c9msh73f3079e4d4c18ap1a1fa8jsnb9b50db354f6',
+                            'X-RapidAPI-Host' => 'sofasport.p.rapidapi.com',
+                        ],
+                        'query' => [
+                            'player_id' => $playerId,
+                        ],
+                    ]);
 
-                $playerPhotoData = $playerPhotoResponse->getBody()->getContents();
-                $playerPhoto = 'data:image/png;base64,' . base64_encode($playerPhotoData);
-
-                return $playerPhoto;
+                    if ($playerPhotoResponse->getStatusCode() == 200) {
+                        $playerPhotoData = $playerPhotoResponse->getBody()->getContents();
+                        $playerPhoto = 'data:image/png;base64,' . base64_encode($playerPhotoData);
+                        return $playerPhoto;
+                    }
+                } catch (\Exception $e) {
+                    // Ignoriraj greške 404 ili bilo koje druge
+                    return null;
+                }
             });
         }
 
         $this->playerStatistics = $players;
-        $this->playerPhotos = $playerPhotos;
+        $this->playerPhotos = array_filter($playerPhotos); // Filtriraj null vrijednosti
     }
 
     // Rekurzivna funkcija za izdvajanje ID-eva igrača
