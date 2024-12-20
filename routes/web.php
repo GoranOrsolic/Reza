@@ -19,6 +19,9 @@ Route::get('/basketball', [App\Http\Controllers\BasketballController::class, 'sh
 
 Route::get('/basketball-standings/{tournamentId}', [App\Http\Controllers\BasketballController::class, 'showStandings'])->name('basketball-standings');
 
+Route::get('/team/basketball-team/{id}', [App\Http\Controllers\BasketballTeamController::class, 'showTeamInfo'])->name('team.basketball-team');
+
+
 
 /*Route::get('/basketball-standings/{seasonId}/{tournamentId}', function ($seasonId, $tournamentId) {
     return view('basketball-standings', compact('seasonId', 'tournamentId'));

@@ -429,17 +429,17 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-xl mb-2">
+                {{--<div class="bg-white rounded-xl shadow-xl mb-2">
                     <div class="p-2 font-bold">Media</div>
                     <div>
                         <ul class="p-2">
                             @foreach (array_reverse($mediaInfo['data']) as $video)
                                 <li class="flex mb-2">
-                                    {{-- Prikaz sličice videozapisa --}}
+                                    --}}{{-- Prikaz sličice videozapisa --}}{{--
                                     <div class="mr-4">
                                         <img src="{{ $video['thumbnailUrl'] }}" alt="{{ $video['title'] }}" height="80" width="144">
                                     </div>
-                                    {{-- Prikaz naslova i poveznice do videa --}}
+                                    --}}{{-- Prikaz naslova i poveznice do videa --}}{{--
                                     <div class="flex flex-col">
                                         <div>{{ $video['title'] }}</div>
                                         <div>{{ $video['subtitle'] }}</div>
@@ -451,7 +451,7 @@
                             @endforeach
                         </ul>
                     </div>
-                </div>
+                </div>--}}
 
 
             </div>

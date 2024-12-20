@@ -14,6 +14,9 @@ class BasketballStandings extends Component
     public $loading = true;
     public $error = null;
 
+    public $seasonId;
+    public $tournamentId;
+
     public function mount($seasonId, $tournamentId)
     {
         // Kreiranje Guzzle klijenta

@@ -198,56 +198,17 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl p-2 shadow-xl mb-2">
-                    <div class="p-2 font-bold">Top rating players</div>
-                   {{-- @php
-                        $first10Ratings = array_slice($topStatsPlayers['data']['rating'], 0, 10);
-                    @endphp
-
-                    @foreach($first10Ratings as $index => $topRating)
-                        <div class="flex p-2 items-center">
-                            <div class="mr-2">{{ $loop->index + 1 }}</div>
-                            @if(isset($playerPhotos[$index]))
-                                <img src="{{ $playerPhotos[$index] }}" alt="Player Image" class="rounded-full mr-2" width="38" height="38">
-                            @endif
-                            <div class="flex-grow">
-                                {{ $topRating['player']['name'] }}
-                                @if(isset($teamLogoRating[$index]))
-                                    <img src="{{ $teamLogoRating[$index] }}" alt="Team Image" class="rounded-full mr-2" width="16" height="16">
-                                @endif
-                            </div>
-                            <div class="ml-auto">
-                                {{ sprintf("%.2f", $topRating['statistics']['rating']) }}
-                            </div>
-                        </div>
-                    @endforeach--}}
+                <div class="bg-white rounded-xl shadow-xl mb-2">
+                    <div class="p-2 font-bold">Top players</div>
+                    <div><livewire:basketball-player-stats :seasonId="$seasonId" :tournamentId="$tournamentId" />
+                    </div>
                 </div>
 
 
                 <div class="bg-white rounded-xl p-2 shadow-xl mb-2">
-                    <div class="p-2 font-bold">Most goals </div>
-                    {{--@php
-                        $first10Goals = array_slice($topStatsPlayers['data']['goals'], 0, 10);
-                    @endphp
-
-                    @foreach($first10Goals as $index => $topGoals)
-                        <div class="flex p-2 items-center">
-                            <div class="mr-2">{{ $loop->index + 1 }}</div>
-                            @if(isset($playerGoalsPhotos[$index]))
-                                <img src="{{ $playerGoalsPhotos[$index] }}" alt="Player Image" class="rounded-full mr-2" width="38" height="38">
-                            @endif
-                            <div class="flex-grow">
-                                {{ $topGoals['player']['name'] }}
-                                @if(isset($teamLogoGoals[$index]))
-                                    <img src="{{ $teamLogoGoals[$index] }}" alt="Team Image" class="rounded-full mr-2" width="16" height="16">
-                                @endif
-                            </div>
-                            <div class="ml-auto">
-                                {{ $topGoals['statistics']['goals'] }}<br>
-                            </div>
-                        </div>
-                    @endforeach
---}}
+                    <div class="p-2 font-bold">Top teams</div>
+                    <div><livewire:basketball-team-stats :seasonId="$seasonId" :tournamentId="$tournamentId" />
+                    </div>
                 </div>
 
                 <div class="bg-white rounded-xl shadow-xl mb-2">

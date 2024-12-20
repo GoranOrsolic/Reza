@@ -35,7 +35,7 @@ class BasketballController extends Controller
 
         $teamMostImg = isset($dataTournament['data']['mostTitlesTeams'][0]['id']) ? $this->getTeamLogoById($dataTournament['data']['mostTitlesTeams'][0]['id']) : null;
 
-        return view('basketball-standings', [
+        return view('basketball-standings',  [
             'standings' => $standings,
             'seasonId' => $seasonId,
             'tournamentId' => $tournamentId,

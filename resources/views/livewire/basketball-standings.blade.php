@@ -39,7 +39,8 @@
                             <td class="px-2 py-2 text-start">
                                 @if(isset($row['team']['id']))
                                     <a href="#" class="flex items-center">
-                                        @if(isset($row['team']['logo_url']))
+                                            @if(isset($row['team']['logo_url']))
+                                            <a href="{{ route('team.basketball-team', ['id' => $row['team']['id'], 'seasonId' => $seasonId, 'tournamentId' => $tournamentId]) }}" class="flex items-center">
                                             <img src="{{ $row['team']['logo_url'] }}" alt="{{ $row['team']['name'] }} logo" class="rounded mr-2" width="24" height="24">
                                         @else
                                             <span class="h-8 mr-2">No Logo</span> <!-- Ili postavi default sliku -->
